@@ -25,7 +25,10 @@ export default function App() {
     const [showAddFriend, setAddFriendOpen] = useState(false);
     const [friendsList, setFriendsList] = useState(initialFriends);
 
-    function handleAddFriend() {}
+    function handleAddFriend(friend) {
+        setFriendsList((friendsList) => [...friendsList, friend]);
+        setAddFriendOpen(false);
+    }
 
     return (
         <div className='app'>
@@ -92,12 +95,14 @@ function FormAddFriend({ onAddFriend }) {
 
         const newFriend = {
             name,
-            imageURL: `${imageURL}?=${id}`,
+            image: `${imageURL}?=${id}`,
             balance: 0,
             id,
         };
+        setName('');
+        setImageURL('https://i.pravatar.cc/48');
 
-        console.log(newFriend);
+        onAddFriend(newFriend);
     }
 
     return (
@@ -116,7 +121,7 @@ function FormAddFriend({ onAddFriend }) {
                 onChange={(e) => setImageURL(e.target.value)}
             />
 
-            <Button onClick={(e) => onAddFriend(e)}>Add</Button>
+            <Button>Add</Button>
         </form>
     );
 }
