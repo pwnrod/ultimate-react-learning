@@ -25,33 +25,52 @@ export default function App() {
 }
 
 function Accordion({ data }) {
+    const [openItemIndex, setOpenItemIndex] = useState(null);
+
     return (
         <div className='accordion'>
             {data.map((el, i) => (
                 <AccordionItem
+                    openItemIndex={openItemIndex}
+                    onOpen={setOpenItemIndex}
                     title={el.title}
-                    text={el.text}
                     num={i}
                     key={el.title}
-                />
+                >
+                    {el.text}
+                </AccordionItem>
             ))}
+            <AccordionItem
+                openItemIndex={openItemIndex}
+                onOpen={setOpenItemIndex}
+                title='Example Title'
+                num={23}
+                key='Test Key'
+            >
+                <p>This is an example</p>
+                <ul>
+                    <li>This is a list</li>
+                    <li>Just to demonstrate</li>
+                    <li>That we can pass different things in here</li>
+                </ul>
+            </AccordionItem>
         </div>
     );
 }
 
-function AccordionItem({ num, title, text }) {
-    const [isOpen, setIsOpen] = useState(false);
+function AccordionItem({ num, title, openItemIndex, onOpen, children }) {
+    const isOpen = num === openItemIndex;
 
-    function handleIsOpen() {
-        setIsOpen((prevIsOpen) => !prevIsOpen);
+    function handleToggle() {
+        onOpen(isOpen ? null : num);
     }
 
     return (
-        <div className={`item ${isOpen ? 'open' : ''}`} onClick={handleIsOpen}>
+        <div className={`item ${isOpen ? 'open' : ''}`} onClick={handleToggle}>
             <p className='number'>{num < 9 ? `0${num}` : num + 1}</p>
             <p className='title'>{title}</p>
             <p className='icon'>{isOpen ? '-' : '+'}</p>
-            {isOpen && <div className='content-box'>{text}</div>}
+            {isOpen && <div className='content-box'>{children}</div>}
         </div>
     );
 }
