@@ -36,7 +36,7 @@ const apiURL = 'http://www.omdbapi.com/?apikey=';
 const apiKey = 'c62657a3';
 
 export default function App() {
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState('inception');
     const [movies, setMovies] = useState([]);
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +49,14 @@ export default function App() {
 
     function handleCloseMovie() {
         setSelectedId(null);
+    }
+
+    function handleAddWatched(movie) {
+        setWatched((watched) => [...watched, movie]);
+    }
+
+    function handleDeleteWatched(id) {
+        setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
     }
 
     useEffect(
@@ -112,11 +120,16 @@ export default function App() {
                             apiKey={apiKey}
                             selectedId={selectedId}
                             onCloseMovie={handleCloseMovie}
+                            onAddWatched={handleAddWatched}
+                            watched={watched}
                         />
                     ) : (
                         <>
                             <WatchedSummary watched={watched} />
-                            <WatchedMovieList watched={watched} />
+                            <WatchedMovieList
+                                watched={watched}
+                                onDeleteWatched={handleDeleteWatched}
+                            />
                         </>
                     )}
                 </Box>
