@@ -36,7 +36,7 @@ const apiURL = 'http://www.omdbapi.com/?apikey=';
 const apiKey = 'c62657a3';
 
 export default function App() {
-    const [query, setQuery] = useState('inception');
+    const [query, setQuery] = useState('');
     const [movies, setMovies] = useState([]);
     const [watched, setWatched] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -84,8 +84,8 @@ export default function App() {
                     setError('');
                 } catch (err) {
                     if (err.name !== 'AbortError') {
+                        console.log(err.message);
                         setError(err.message);
-                        console.error(err.message);
                     }
                 } finally {
                     setIsLoading(false);
@@ -98,6 +98,7 @@ export default function App() {
                 return;
             }
 
+            handleCloseMovie();
             fetchMovies();
 
             return function () {

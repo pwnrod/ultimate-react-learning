@@ -66,7 +66,6 @@ export default function MovieDetails({
                     const data = await res.json();
                     if (data.Response === 'False')
                         throw new Error('Movie not found');
-                    console.log(data);
                     setMovie(data);
                 } catch (err) {
                     setError(err.message);
@@ -78,7 +77,7 @@ export default function MovieDetails({
 
             getMovieDetails();
         },
-        [selectedId],
+        [selectedId, apiKey, apiURL],
     );
 
     useEffect(
@@ -93,6 +92,23 @@ export default function MovieDetails({
             };
         },
         [title],
+    );
+
+    useEffect(
+        function () {
+            function callback(e) {
+                if (e.code === 'Escape') {
+                    onCloseMovie();
+                }
+            }
+
+            document.addEventListener('keydown', callback);
+
+            return function () {
+                document.removeEventListener('keydown', callback);
+            };
+        },
+        [onCloseMovie],
     );
 
     return (
