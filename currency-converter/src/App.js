@@ -4,24 +4,25 @@ import { useEffect, useState } from 'react';
 
 export default function App() {
     const [startingCurrency, setStartingCurrency] = useState('USD');
-    const [newCurrency, setNewCurrency] = useState('USD');
-    const [amount, setAmount] = useState('');
+    const [newCurrency, setNewCurrency] = useState('EUR');
+    const [amount, setAmount] = useState(1);
     const [output, setOutput] = useState('');
+    const [isLoading, setIsLoading] = useState('');
 
     useEffect(
         function () {
-            if (!amount.length || startingCurrency === newCurrency) return;
-
             async function fetchData() {
-                try {
-                    const res = await fetch(
-                        `https://api.frankfurter.app/latest?amount=${Number(amount)}&from=${startingCurrency}&to=${newCurrency}`,
-                    );
-                    const data = await res.json();
-                    setOutput(data.rates[newCurrency].toFixed(2));
-                } catch (err) {
-                    console.log(err);
-                }
+                setIsLoading(true);
+                const res = await fetch(
+                    `https://api.frankfurter.app/latest?amount=${Number(amount)}&from=${startingCurrency}&to=${newCurrency}`,
+                );
+                const data = await res.json();
+                setOutput(data.rates[newCurrency]);
+                setIsLoading(false);
+            }
+
+            if (startingCurrency === newCurrency || amount.length === 0) {
+                return setOutput(amount);
             }
 
             fetchData();
@@ -35,10 +36,12 @@ export default function App() {
                 type='text'
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                disabled={isLoading}
             />
             <select
                 value={startingCurrency}
                 onChange={(e) => setStartingCurrency(e.target.value)}
+                disabled={isLoading}
             >
                 <option value='USD'>USD</option>
                 <option value='EUR'>EUR</option>
@@ -48,13 +51,16 @@ export default function App() {
             <select
                 value={newCurrency}
                 onChange={(e) => setNewCurrency(e.target.value)}
+                disabled={isLoading}
             >
                 <option value='USD'>USD</option>
                 <option value='EUR'>EUR</option>
                 <option value='CAD'>CAD</option>
                 <option value='INR'>INR</option>
             </select>
-            <p>{amount.length > 0 && output}</p>
+            <p>
+                {output} {newCurrency}
+            </p>
         </div>
     );
 }
