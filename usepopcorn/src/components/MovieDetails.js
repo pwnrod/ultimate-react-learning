@@ -2,12 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import StarRating from './StarRating';
 import Loader from './Loader';
 import ErrorMessage from './ErrorMessage';
+import { apiKey, apiURL } from '../config';
 
 export default function MovieDetails({
     selectedId,
     onCloseMovie,
-    apiURL,
-    apiKey,
     onAddWatched,
     watched,
 }) {
