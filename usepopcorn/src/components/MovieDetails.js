@@ -89,7 +89,7 @@ export default function MovieDetails({
 
             getMovieDetails();
         },
-        [selectedId, apiKey, apiURL],
+        [selectedId],
     );
 
     useEffect(
