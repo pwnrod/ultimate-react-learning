@@ -3,6 +3,7 @@ import Error from './Error';
 import Header from './Header';
 import Loader from './Loader';
 import Main from './Main';
+import NextButton from './NextButton';
 import Question from './Question';
 import StartScreen from './StartScreen';
 
@@ -34,6 +35,8 @@ function reducer(state, action) {
                         ? state.points + question.points
                         : state.points,
             };
+        case 'nextQuestion':
+            return { ...state, index: state.index + 1, answer: null };
         default:
             throw new Error('Unknown action type');
     }
@@ -66,11 +69,14 @@ export default function App() {
                     />
                 )}
                 {status === 'active' && (
-                    <Question
-                        question={questions[index]}
-                        dispatch={dispatch}
-                        answer={answer}
-                    />
+                    <>
+                        <Question
+                            question={questions[index]}
+                            dispatch={dispatch}
+                            answer={answer}
+                        />
+                        <NextButton dispatch={dispatch} answer={answer} />
+                    </>
                 )}
             </Main>
         </div>
